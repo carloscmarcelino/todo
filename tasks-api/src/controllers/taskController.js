@@ -4,19 +4,28 @@ import { connection } from '../database.js';
 export const getAllTasks = (_, res) => {
   connection.query('SELECT * FROM todo', (error, result) => {
     if (error) {
-      res.status(500).json({ message: 'Internal Server Error' });
-      console.log(error);
-    } else {
-      res.json({ data: result, totalItems: Number(result?.length ?? 0) });
+      throw new Error(error);
     }
+
+    res.json({
+      data: result ?? [],
+      totalItems: result.length,
+    });
   });
 };
 
 export const getTaskById = (req, res) => {
   const { id } = req.params;
-  const task = tasks.find((task) => task.id === Number(id));
 
-  res.status(200).json(task);
+  connection.query('SELECT * FROM todo WHERE id = ?', [id], (error, result) => {
+    if (error) {
+      throw new Error(error);
+    }
+
+    console.log(result);
+
+    res.json(result?.[0]);
+  });
 };
 
 export const createTask = (req, res) => {
@@ -29,39 +38,74 @@ export const createTask = (req, res) => {
 
   const newTask = {
     title,
-    id: tasks.length + 1,
     created_at: dayjs().toISOString(),
     completed: false,
   };
 
-  tasks.push(newTask);
+  connection.query('INSERT INTO todo SET ?', [newTask], (error, result) => {
+    if (error) {
+      throw new Error(error);
+    }
 
-  res.json(newTask);
+    res.status(201).json({
+      data: newTask,
+      totalItems: result.length,
+    });
+  });
 };
 
 export const updateTask = (req, res) => {
   const { title, completed } = req.body;
   const { id } = req.params;
 
-  const updatedTasks = tasks.map((task) => {
-    if (task.id === Number(id)) {
-      return { ...task, title, completed };
+  if (!title) {
+    res.status(400).json({ message: 'Title is required!' });
+    return;
+  }
+
+  if (typeof value !== 'boolean') {
+    res.status(400).json({ message: 'Completed is required!' });
+    return;
+  }
+
+  connection.query('SELECT * FROM todo WHERE id = ?', [id], (error, result) => {
+    if (error) {
+      throw new Error(error);
     }
 
-    return task;
+    if (!result.length) {
+      res.status(404).json({ message: 'Task not found!' });
+    } else {
+      connection.query(
+        'UPDATE todo SET title = ?, completed = ? WHERE id = ?',
+        [title, completed, id],
+        (error, updateResult) => {
+          if (error) {
+            throw new Error(error);
+          }
+
+          res.json({
+            title,
+            completed,
+          });
+        },
+      );
+    }
   });
-
-  tasks = updatedTasks;
-
-  res.json(tasks);
 };
 
 export const deleteTask = (req, res) => {
   const { id } = req.params;
 
-  const remainingTasks = tasks.filter((task) => task.id !== Number(id));
+  connection.query('DELETE FROM todo WHERE id = ?', [id], (error, result) => {
+    if (error) {
+      throw new Error(error);
+    }
 
-  tasks = remainingTasks;
-
-  res.json(tasks);
+    if (result.affectedRows > 0) {
+      res.json({ message: 'Task deleted with success!' });
+    } else {
+      res.status(404).json({ message: 'Task not found!' });
+    }
+  });
 };
