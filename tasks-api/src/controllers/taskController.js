@@ -63,7 +63,7 @@ export const updateTask = (req, res) => {
     return;
   }
 
-  if (typeof value !== 'boolean') {
+  if (typeof completed !== 'boolean') {
     res.status(400).json({ message: 'Completed is required!' });
     return;
   }
@@ -79,7 +79,7 @@ export const updateTask = (req, res) => {
       connection.query(
         'UPDATE todo SET title = ?, completed = ? WHERE id = ?',
         [title, completed, id],
-        (error, updateResult) => {
+        (error) => {
           if (error) {
             throw new Error(error);
           }
