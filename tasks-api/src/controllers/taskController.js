@@ -7,8 +7,13 @@ export const getAllTasks = (_, res) => {
       throw new Error(error);
     }
 
+    const items = result.map((result) => ({
+      ...result,
+      completed: !!result.completed,
+    }));
+
     res.json({
-      data: result ?? [],
+      items: items ?? [],
       totalItems: result.length,
     });
   });
@@ -22,7 +27,7 @@ export const getTaskById = (req, res) => {
       throw new Error(error);
     }
 
-    res.json(result?.[0]);
+    res.json({ ...result?.[0], completed: !!result?.[0].completed });
   });
 };
 
@@ -46,7 +51,7 @@ export const createTask = (req, res) => {
     }
 
     res.status(201).json({
-      data: { ...newTask, id: result.insertId },
+      items: { ...newTask, id: result.insertId },
       totalItems: result.length,
     });
   });
