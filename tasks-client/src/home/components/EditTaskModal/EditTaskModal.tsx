@@ -16,14 +16,14 @@ import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-
 
 import { CustomInput, FormWrapper } from '@/components';
 import { useEditTask } from '@/home/api';
-import { Task } from '@/home/api/types';
+import { Task, TasksResponse } from '@/home/api/types';
 import { FormType } from '@/home/validators/formSchema';
 
 type EditTaskModalProps = {
   task: Task;
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<Task[], unknown>>;
+  ) => Promise<QueryObserverResult<TasksResponse, unknown>>;
   handleSubmit: UseFormHandleSubmit<FormType>;
   register: UseFormRegister<FormType>;
 };

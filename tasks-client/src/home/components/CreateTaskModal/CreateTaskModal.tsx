@@ -17,13 +17,13 @@ import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-
 import { FormWrapper } from '@/components';
 import { CustomInput } from '@/components/CustomInput';
 import { useCreateTask } from '@/home/api';
-import { Task } from '@/home/api/types';
+import { TasksResponse } from '@/home/api/types';
 import { CreateTaskType, createTaskSchema } from '@/home/validators/createTaskSchema';
 
 type CreateTaskModalProps = {
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<Task[], unknown>>;
+  ) => Promise<QueryObserverResult<TasksResponse, unknown>>;
 };
 
 export const CreateTaskModal = ({ refetch }: CreateTaskModalProps) => {

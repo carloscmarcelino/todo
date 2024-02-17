@@ -1,8 +1,8 @@
 import axiosObject from '@/lib/axios';
 
-import { CreateTaskBody, EditTaskBody, Task } from './types';
+import { CreateTaskBody, EditTaskBody, Task, TasksResponse } from './types';
 
-export const getAllTasks = async (): Promise<Task[]> => {
+export const getAllTasks = async (): Promise<TasksResponse> => {
   const { data } = await axiosObject.get('/tasks');
 
   return data;

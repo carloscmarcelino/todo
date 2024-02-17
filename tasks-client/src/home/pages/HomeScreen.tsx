@@ -14,7 +14,7 @@ export const HomeScreen = () => {
       </Text>
 
       <Flex flexDirection="column" m="1rem">
-        {data?.map((task) => (
+        {data?.items?.map((task) => (
           <TaskBox key={task.id} task={task} refetch={refetch} />
         ))}
       </Flex>

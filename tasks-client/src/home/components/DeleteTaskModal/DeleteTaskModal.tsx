@@ -16,14 +16,14 @@ import { FaTrash } from 'react-icons/fa';
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query';
 
 import { useDeleteTask } from '@/home/api';
-import { Task } from '@/home/api/types';
+import { TasksResponse } from '@/home/api/types';
 import { FormType } from '@/home/validators/formSchema';
 
 type DeleteTaskModalProps = {
   id: number;
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<Task[], unknown>>;
+  ) => Promise<QueryObserverResult<TasksResponse, unknown>>;
   handleSubmit: UseFormHandleSubmit<FormType>;
 };
 
