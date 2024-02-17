@@ -22,8 +22,6 @@ export const getTaskById = (req, res) => {
       throw new Error(error);
     }
 
-    console.log(result);
-
     res.json(result?.[0]);
   });
 };
@@ -48,7 +46,7 @@ export const createTask = (req, res) => {
     }
 
     res.status(201).json({
-      data: newTask,
+      data: { ...newTask, id: result.insertId },
       totalItems: result.length,
     });
   });
