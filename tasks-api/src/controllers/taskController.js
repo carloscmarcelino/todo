@@ -1,9 +1,15 @@
 import dayjs from 'dayjs';
-
-let tasks = [];
+import { connection } from '../database.js';
 
 export const getAllTasks = (_, res) => {
-  res.json(tasks);
+  connection.query('SELECT * FROM todo', (error, result) => {
+    if (error) {
+      res.status(500).json({ message: 'Internal Server Error' });
+      console.log(error);
+    } else {
+      res.json({ data: result, totalItems: Number(result?.length ?? 0) });
+    }
+  });
 };
 
 export const getTaskById = (req, res) => {
